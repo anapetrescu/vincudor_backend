@@ -7,7 +7,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../config');
 //Registration
 router.post('/user/register', async function (req, res) {
-    var newUser = req.body.user;
+    var newUser = req.body;
     var result = (await User.createUser(newUser, function(err, user){}))
     console.log(result);
     if(result === 1){
@@ -20,7 +20,7 @@ router.post('/user/register', async function (req, res) {
 });
 
 router.post('/user/login', async function(req, res){
-    var user = req.body.user;
+    var user = req.body;
     console.log(user);
     var result = (await User.loginUser(user, function(err, userRes){}))
     console.log(result);
@@ -35,4 +35,35 @@ router.post('/user/login', async function(req, res){
              }
 });
 
+router.post('/user/edit', async function(req, res){
+  var newUser = req.body;
+  console.log(newUser);
+  var result = (await User.editUser(newUser, function(err, res){}))
+  console.log(result);
+  if(result === 0)
+    res.send(500);
+  else
+    res.send(200);
+});
+router.post('/user/changePassword', async function(req, res){
+  var user = req.body;
+  console.log(user);
+  var result = (await User.changePassword(user, function(err, res){}));
+  console.log(result);
+  if(result === 0)
+    res.send(500);
+  else
+    res.send(200);
+});
+
+router.post('/user/delete', async function(req, res){
+  var user = req.body;
+  console.log(user);
+  var result = (await User.deleteUser(user, function(err, res){}))
+  console.log(result);
+  if(result === 0)
+    res.send(500);
+  else
+    res.send(200);
+})
 module.exports = router

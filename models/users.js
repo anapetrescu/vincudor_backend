@@ -89,7 +89,51 @@ async function loginUser(user){
     })
 }
 
+async function editUser(newUser){
+    return new Promise(function(resolve, reject){
+        sql.query("UPDATE users SET first_name = ?, last_name = ?, city = ?, phone_number = ?, email = ? WHERE user_id = ?", 
+        [newUser.first_name, newUser.last_name, newUser.city, newUser.phone_number, newUser.email, newUser.user_id], function(err, res){
+            if(err){
+                console.log("err: ", err)
+                resolve(0);
+            }
+            else
+                resolve(1);
+        })
+    })
+}
+
+async function changePassword(user){
+    return new Promise(function(resolve, reject){
+        var newPassword = bcrypt.hashSync(user.password, salt);
+        sql.query("UPDATE users SET password = ? WHERE user_id = ?", [newPassword, user.user_id], function(err, res){
+            if(err){
+                console.log("err: ", err);
+                resolve(0);
+            }
+            else
+                resolve(1);
+        })
+    })
+}
+
+async function deleteUser(user){
+    return new Promise(function(resolve, reject){
+        sql.query("DELETE FROM users WHERE user_id = ?", user.user_id, function(err, res){
+            if(err){
+                console.log("err: ", err);
+                resolve(0);
+            }
+            else
+                resolve(1);
+        })
+    })
+}
+
 module.exports.User = User;
 module.exports.createUser = createUser;
 module.exports.loginUser= loginUser;
+module.exports.editUser = editUser;
+module.exports.changePassword = changePassword;
+module.exports.deleteUser = deleteUser;
 

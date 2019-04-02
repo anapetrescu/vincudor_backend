@@ -12,4 +12,5 @@ app.use(function(req, res, next) {
 
 
 app.use(require('./controllers/userController'))
+app.use(require('./controllers/wineController'))
 app.listen(port, () => console.log(`App listening on port ${port}!`))
