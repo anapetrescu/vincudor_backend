@@ -52,5 +52,42 @@ async function deleteWine(wine){
     })
 }
 
+async function getAll(){
+    return new Promise(function(resolve, reject){
+        sql.query("SELECT wine_id, producer_id, wine_name, type, price, quantity, color, description FROM wines", async function(err, res){
+            if(err){
+                console.log("err", err);
+                resolve(0);
+            }
+            else{
+                console.log(res[0]);
+                let wines = [];
+                for(let i = 0; i < res.length; i++){
+                    var producer = await getProducer(res[i].producer_id);
+                    res[i].producer = producer;
+                    wines.push(res[i]);
+                }
+                resolve(wines);
+            }
+        })
+    })
+}
+
+async function getProducer(producer_id){
+    return new Promise (function(resolve, reject){
+         sql.query("SELECT user_id, first_name, last_name, email, city, phone_number FROM users WHERE user_id = ?",
+        [producer_id], function(err, res){
+            if(err){
+                console.log("err", err);
+                resolve(0);
+            }
+            else{
+                resolve(res[0]);
+            }
+        })
+    })
+}
+
 module.exports.insertWine = insertWine;
 module.exports.deleteWine = deleteWine;
+module.exports.getAll = getAll;

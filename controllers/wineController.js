@@ -22,4 +22,14 @@ router.post('/wine/delete', async function(req, res){
         res.send(200);
 })
 
+router.post('/wines/all', async function(req, res) {
+    var result = (await Wine.getAll(function(err, res){}))
+    if(result === 0)
+        res.send(500);
+    else{
+        console.log(result);
+        res.status(200).send({wines: result});
+    }
+})
+
 module.exports = router
