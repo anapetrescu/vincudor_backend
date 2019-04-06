@@ -26,10 +26,19 @@ router.get('/wines/all', async function(req, res) {
     var result = (await Wine.getAll(function(err, res){}))
     if(result === 0)
         res.send(500);
-    else{
-        console.log(result);
+    else
         res.status(200).send({wines: result});
-    }
+})
+
+router.get('/wines/:id', async function(req, res){
+    var wine_id = req.params.id;
+    var result = (await Wine.getById(wine_id, function(err, res){}))
+    if(result === 0)
+        res.send(400);
+    else if(result === -1)
+            res.send(500);
+        else
+            res.status(200).send({wine: result});
 })
 
 module.exports = router

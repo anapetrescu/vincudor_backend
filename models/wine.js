@@ -32,7 +32,6 @@ async function insertWine(newWine){
                 resolve(0);
             }
             else{
-                console.log(res.insertId);
                 resolve(1);    
             }
     })
@@ -60,7 +59,6 @@ async function getAll(){
                 resolve(0);
             }
             else{
-                console.log(res[0]);
                 let wines = [];
                 for(let i = 0; i < res.length; i++){
                     var producer = await getProducer(res[i].producer_id);
@@ -72,7 +70,25 @@ async function getAll(){
         })
     })
 }
-
+async function getById(wine_id){
+    return new Promise (function(resolve, reject){
+        sql.query("SELECT wine_id, producer_id, wine_name, type, price, quantity, color, description FROM wines WHERE wine_id = ?",
+        [wine_id], async function(err, res){
+            if(err){
+                console.log("err:", err);
+                resolve(0);
+            } 
+            else if(res[0] === undefined){
+                resolve(0);
+            }
+                else{
+                    var producer = await getProducer(res[0].producer_id);
+                    res[0].producer = producer;
+                    resolve(res[0]);
+                }
+        })
+    })
+}
 async function getProducer(producer_id){
     return new Promise (function(resolve, reject){
          sql.query("SELECT user_id, first_name, last_name, email, city, phone_number FROM users WHERE user_id = ?",
@@ -91,3 +107,4 @@ async function getProducer(producer_id){
 module.exports.insertWine = insertWine;
 module.exports.deleteWine = deleteWine;
 module.exports.getAll = getAll;
+module.exports.getById = getById;
