@@ -34,6 +34,24 @@ async function deleteCart(user_id, product_id) {
     
 }
 
+async function getCart(user_id, product_id) {
+    return new Promise(function(resolve, reject){
+        sql.query("SELECT * FROM cart", function(err, res){
+            if(err){
+                console.log("err", err);
+                resolve(-1);
+            }
+            else{
+                resolve(res);
+            }
+        })
+    })
+    
+}
+
+
+
 module.exports.Cart = Cart;
 module.exports.insertCart = insertCart;
 module.exports.deleteCart = deleteCart;
+module.exports.getCart = getCart;

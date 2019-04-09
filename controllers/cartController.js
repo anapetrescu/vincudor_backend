@@ -25,4 +25,12 @@ router.post('/cart/delete', async function(req, res){
         res.send(200);  
 })
 
+router.get('/cart/all', async function(req, res){
+    var cart = await Cart.getCart();
+    if(cart === -1)
+      res.send(500);
+    else
+        res.status(200).send({cart: cart});
+})
+
 module.exports = router
