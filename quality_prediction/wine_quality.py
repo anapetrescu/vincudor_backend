@@ -10,3 +10,4 @@ with open(filename, 'rb') as handle:
     prediction = model.predict(features)
 
 print(prediction)
+sys.stdout.flush()
