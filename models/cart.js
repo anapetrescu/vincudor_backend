@@ -1,4 +1,5 @@
 var sql = require('../db');
+var Wine = require('./wine');
 var Cart = {}
 async function insertCart(user_id, product_id) {
     return new Promise(function(resolve, reject){
@@ -34,15 +35,20 @@ async function deleteCart(user_id, product_id) {
     
 }
 
-async function getCart(user_id, product_id) {
+async function getCart(user_id) {
     return new Promise(function(resolve, reject){
-        sql.query("SELECT * FROM cart", function(err, res){
+        sql.query("SELECT * FROM cart WHERE user_id = ?", [user_id], async function(err, res){
             if(err){
                 console.log("err", err);
                 resolve(-1);
             }
             else{
-                resolve(res);
+                let cart = []
+                for(var i = 0; i < res.length; i++){
+                    var product = await Wine.getById(res[i].product_id);
+                    cart.push(product);
+                }
+                resolve(cart);
             }
         })
     })
