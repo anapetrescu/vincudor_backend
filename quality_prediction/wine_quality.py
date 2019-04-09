@@ -7,7 +7,11 @@ features = np.array(sys.argv[1:],ndmin=2).astype(np.float)
 filename = 'rfc_model.pkl'
 with open(filename, 'rb') as handle:
     model = pickle.load(handle)
-    prediction = model.predict(features)
+    prediction_model = model.predict(features)
 
-print(prediction)
+prediction = str(np.ndarray.item(prediction_model))
+sys.stdout.write(prediction)
 sys.stdout.flush()
+sys.exit(0)
+
+
