@@ -104,7 +104,37 @@ async function getProducer(producer_id){
     })
 }
 
+async function getByProducer(producer_id){
+    return new Promise(function(resolve, reject){
+        sql.query("SELECT wine_id, producer_id, wine_name, type, price, quantity, color, description FROM wines WHERE producer_id = ?",
+        [producer_id], function(err, res){
+            if(err){
+                console.log("err", err);
+                resolve(-1);
+            }
+            else
+                resolve(res);
+        })
+    })
+}
+
+async function getDetails(wine_id){
+    return new Promise(function(resolve, reject){
+        sql.query("SELECT * FROM wines WHERE wine_id = ?", [wine_id], function(err, res){
+            if(err){
+                console.log("err", err)
+                resolve(-1);
+            }
+            else
+                resolve(res);
+        })
+    })
+}
+
+
 module.exports.insertWine = insertWine;
 module.exports.deleteWine = deleteWine;
 module.exports.getAll = getAll;
 module.exports.getById = getById;
+module.exports.getByProducer = getByProducer;
+module.exports.getDetails = getDetails;

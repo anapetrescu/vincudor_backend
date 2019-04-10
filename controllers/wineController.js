@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var Wine = require('../models/wine')
+var WineMiddleware = require('../middlewares/wineMiddleware')
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
@@ -41,4 +42,31 @@ router.get('/wines/:id', async function(req, res){
             res.status(200).send({wine: result});
 })
 
+router.post('/wines/quality', async function(req, res){
+    var details = req.body;
+    console.log(details);
+    var quality = await WineMiddleware.getQuality(details);
+    if(quality === -1)
+        res.send(500);
+    else
+        res.status(200).send({quality: quality})
+})
+
+router.get('/wines/producer/:id', async function(req, res){
+    var id = req.params.id;
+    var wines = await Wine.getByProducer(id);
+    if(wines === -1)
+        res.send(500);
+    else
+        res.status(200).send({wines: wines});
+})
+
+router.get('/wines/details/:id', async function(req, res){
+    var id = req.params.id;
+    var wine = await Wine.getDetails(id);
+    if(wine === -1)
+        res.send(500);
+    else
+        res.status(200).send({wine: wine});
+})
 module.exports = router
