@@ -1,7 +1,7 @@
 async function getQuality(details){
 return new Promise(function(resolve, reject){
-    const { spawn } = require('child_process');
-    const pythonProcess = spawn('python',["../quality_prediction/wine_quality.py",
+    var spawn = require("child_process").spawn; 
+    const pythonProcess = spawn('python',["quality_prediction/wine_quality.py",
                             parseFloat(details.fixed_acidity),
                             parseFloat(details.volatile_acidity),    
                             parseFloat(details.citric_acid),         
@@ -14,13 +14,12 @@ return new Promise(function(resolve, reject){
                             parseFloat(details.sulphates),           
                             parseFloat(details.alcohol)]);
     pythonProcess.stdout.on('data', function(data) {
-
-        resolve(data);
+        resolve(data.toString());
     });
 
     pythonProcess.stderr.on('data', (data) => {
-        console.log(data)
-        resolve(data);
+        console.log('ceva')
+        resolve(data.toString());
     });
     })
 }
