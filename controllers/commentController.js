@@ -23,4 +23,13 @@ router.post('/comment/delete', async function(req, res){
         res.send(200);
 })
 
+router.post('/comment/edit', async function(req, res){
+    var commmentDetails = req.body;
+    var result = await Comment.editComment(commmentDetails);
+    if(result === -1)
+        res.send(500);
+    else
+        res.send(200);
+})
+
 module.exports = router

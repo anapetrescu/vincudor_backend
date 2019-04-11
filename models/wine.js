@@ -1,5 +1,5 @@
 var sql = require('../db');
-
+var Comment = require('../models/comment')
 var Wine = function(wine){
     this.wine_id                                = wine.wine_id;
     this.producer_id                            = wine.producer_id;
@@ -83,7 +83,9 @@ async function getById(wine_id){
             }
                 else{
                     var producer = await getProducer(res[0].producer_id);
+                    var comments = await Comment.getCommentsByWineId(res[0].wine_id)
                     res[0].producer = producer;
+                    res[0].comments = comments;
                     resolve(res[0]);
                 }
         })
