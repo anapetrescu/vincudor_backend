@@ -18,7 +18,7 @@ async function insertComment(commentDetails){
                 resolve(-1);
             }
             else
-                resolve(1);
+                resolve(res.insertId);
         })
     })
 }

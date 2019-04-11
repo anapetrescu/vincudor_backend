@@ -6,12 +6,14 @@ var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
 router.post('/commment/add', async function(req, res) {
-    var commmentDetails = req.body;
-    var result = await Comment.insertComment(commmentDetails);
+    var commentDetails = req.body;
+    var result = await Comment.insertComment(commentDetails);
     if(result === -1)
         res.send(500);
-    else
-        res.send(200);
+    else{
+        commentDetails.comment_id = result;
+        res.status(200).send({comment: commentDetails});
+    }
 })
 
 router.post('/comment/delete', async function(req, res){
@@ -28,8 +30,10 @@ router.post('/comment/edit', async function(req, res){
     var result = await Comment.editComment(commmentDetails);
     if(result === -1)
         res.send(500);
-    else
+    else{
         res.send(200);
+        res.status(200).send({comment: commentDetails});
+    }
 })
 
 module.exports = router
