@@ -69,4 +69,14 @@ router.get('/wines/details/:id', async function(req, res){
     else
         res.status(200).send({wine: wine});
 })
+
+router.post('/wines/edit', async function(req, res){
+    var wine = req.body;
+    var result = await Wine.editWine(wine);
+    if(result === 0)
+        res.send(500);
+    else
+        res.send(200);
+
+})
 module.exports = router

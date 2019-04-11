@@ -133,6 +133,60 @@ async function getDetails(wine_id){
     })
 }
 
+async function editWine(wine){
+    return new Promise(function(resolve, reject){
+        var query = "UPDATE wines SET " +
+                    "wine_name            = ?, " +
+                    "type                 = ?, " +
+                    "fixed_acidity        = ?, " +
+                    "volatile_acidity     = ?, " +
+                    "citric_acid          = ?, " +
+                    "residual_sugar       = ?, " +
+                    "chlorides            = ?, " +
+                    "free_sulfur_dioxide  = ?, " +
+                    "total_sulfur_dioxide = ?, " +
+                    "density              = ?, " +
+                    "pH                   = ?, " +
+                    "sulphates            = ?, " +
+                    "alcohol              = ?, " +
+                    "quality              = ?, " +
+                    "price                = ?, " +
+                    "quantity             = ?, " +
+                    "color                = ?, " +
+                    "description          = ? " +
+                    "WHERE wine_id = ?"; 
+        sql.query(query, [
+            wine.wine_name,           
+            wine.type,          
+            wine.fixed_acidity,       
+            wine.volatile_acidity,    
+            wine.citric_acid,         
+            wine.residual_sugar,      
+            wine.chlorides,           
+            wine.free_sulfur_dioxide, 
+            wine.total_sulfur_dioxide,
+            wine.density,             
+            wine.pH,                  
+            wine.sulphates,           
+            wine.alcohol,             
+            wine.quality,             
+            wine.price,               
+            wine.quantity,            
+            wine.color,               
+            wine.description,
+            wine.wine_id         
+        ], function(err, res){
+            if(err){
+                console.log("err", err)
+                resolve(-1);
+            }
+            else
+                resolve(1);
+        })
+    })
+    
+}
+
 
 module.exports.insertWine = insertWine;
 module.exports.deleteWine = deleteWine;
@@ -140,3 +194,4 @@ module.exports.getAll = getAll;
 module.exports.getById = getById;
 module.exports.getByProducer = getByProducer;
 module.exports.getDetails = getDetails;
+module.exports.editWine = editWine;
