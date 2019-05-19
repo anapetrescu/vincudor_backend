@@ -54,8 +54,8 @@ async function editComment(commentDetails){
 }
 
 async function getCommentsByWineId(wine_id){
-    return new Promise(function(resolve, reject){
-        sql.query("SELECT * FROM comments WHERE wine_id = ?", [wine_id], function(err, res){
+    return new Promise(async function(resolve, reject){
+        sql.query("SELECT C.*, U.first_name, U.last_name FROM comments C, users U WHERE C.wine_id = ? AND U.user_id = C.user_id", [wine_id], function(err, res){
             if(err){
                 console.log(err);
                 resolve(-1);

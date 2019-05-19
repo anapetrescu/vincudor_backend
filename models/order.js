@@ -20,7 +20,8 @@ async function insertOrder(orderDetails) {
                 quantity: wines[i].quantity
             }
             var result = await insertOrders(newOrder);
-            if(result === -1)
+            var resultUpdate = await updateQuantity(newOrder.wine_id, newOrder.quantity)
+            if(result === -1 || resultUpdate === -1)
                 resolve(-1);
         }
         resolve(1);
@@ -51,6 +52,36 @@ async function insertOrders(newOrder){
             }
             else
                 resolve(1);
+        })
+    })
+}
+
+async function updateQuantity(wine_id, quantity){
+    return new Promise(async function(resolve, reject){
+        var oldQuantity = await getQuantity(wine_id);
+        console.log(oldQuantity.quantity, parseFloat(quantity));
+        var newQuantity = parseFloat(oldQuantity.quantity) - parseFloat(quantity);
+        console.log(newQuantity);
+        sql.query("UPDATE wines SET quantity = ? WHERE wine_id = ?", [newQuantity, wine_id], function(err, res){
+            if(err){
+                console.log("err", err);
+                resolve(-1);
+            }
+            else
+                resolve(1);
+        })
+    })
+}
+
+async function getQuantity(wine_id){
+    return new Promise(function(resolve, reject){
+        sql.query("SELECT quantity FROM wines WHERE wine_id = ?", [wine_id], function(err, res){
+             if(err){
+                console.log("err", err);
+                resolve(-1);
+            }
+            else
+                resolve(res[0]);
         })
     })
 }
