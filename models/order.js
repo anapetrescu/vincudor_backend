@@ -1,5 +1,5 @@
 var sql = require('../db');
-
+var Cart = require('./cart')
 async function insertOrder(orderDetails) {
     return new Promise(async function(resolve, reject){
         var newOrderDetails = {
@@ -21,7 +21,8 @@ async function insertOrder(orderDetails) {
             }
             var result = await insertOrders(newOrder);
             var resultUpdate = await updateQuantity(newOrder.wine_id, newOrder.quantity)
-            if(result === -1 || resultUpdate === -1)
+            var resultDelete = await Cart.deleteCart(newOrder.user_id, newOrder.wine_id)
+            if(result === -1 || resultUpdate === -1 || resultDelete === -1)
                 resolve(-1);
         }
         resolve(1);

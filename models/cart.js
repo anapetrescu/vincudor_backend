@@ -1,11 +1,12 @@
 var sql = require('../db');
 var Wine = require('./wine');
 var Cart = {}
-async function insertCart(user_id, product_id) {
+async function insertCart(user_id, product_id, quantity) {
     return new Promise(function(resolve, reject){
         var cart = {
             user_id: user_id,
-            product_id: product_id
+            product_id: product_id,
+            quantity: quantity
         }
         sql.query("INSERT INTO cart SET ?", [cart], function(err, res){
             if(err){
@@ -55,9 +56,32 @@ async function getCart(user_id) {
     
 }
 
+async function updateCart(wines, user_id){
+    for(var i = 0; i < wines.length; i++){
+        console.log(wines[i].product_id, wines[i].quantity, user_id)
+        var result = await updateProduct(wines[i].product_id, wines[i].quantity, user_id);
+        if(result === -1)
+            return -1;
+    }
+    return 1;
+}
 
+async function updateProduct(product_id, quantity, user_id){
+    return new Promise(function(resolve, reject){
+        sql.query("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?", 
+            [quantity, user_id, product_id], function(err, res){
+            if(err){
+                console.log("err", err);
+                resolve(-1);
+            }
+            else
+                resolve(1);
+        })
+    })
+}
 
 module.exports.Cart = Cart;
 module.exports.insertCart = insertCart;
 module.exports.deleteCart = deleteCart;
 module.exports.getCart = getCart;
+module.exports.updateCart = updateCart;
