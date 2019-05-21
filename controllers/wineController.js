@@ -31,7 +31,7 @@ router.get('/wines/all', async function(req, res) {
         res.status(200).send({wines: result});
 })
 
-router.get('/wines/:wine_id/:user_id', async function(req, res){
+router.get('/wines/:wine_id/user/:user_id', async function(req, res){
     var wine_id = req.params.wine_id;
     var user_id = req.params.user_id;
     var result = (await Wine.getById(wine_id,user_id, function(err, res){}))
@@ -55,6 +55,7 @@ router.post('/wines/quality', async function(req, res){
 
 router.get('/wines/producer/:id', async function(req, res){
     var id = req.params.id;
+    console.log(id)
     var wines = await Wine.getByProducer(id);
     if(wines === -1)
         res.send(500);
