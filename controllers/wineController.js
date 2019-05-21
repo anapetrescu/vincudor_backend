@@ -31,9 +31,10 @@ router.get('/wines/all', async function(req, res) {
         res.status(200).send({wines: result});
 })
 
-router.get('/wines/:id', async function(req, res){
-    var wine_id = req.params.id;
-    var result = (await Wine.getById(wine_id, function(err, res){}))
+router.get('/wines/:wine_id/:user_id', async function(req, res){
+    var wine_id = req.params.wine_id;
+    var user_id = req.params.user_id;
+    var result = (await Wine.getById(wine_id,user_id, function(err, res){}))
     if(result === 0)
         res.send(400);
     else if(result === -1)

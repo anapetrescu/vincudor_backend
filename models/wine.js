@@ -62,7 +62,9 @@ async function getAll(){
                 let wines = [];
                 for(let i = 0; i < res.length; i++){
                     var producer = await getProducer(res[i].producer_id);
+                    var avgReview = await getReview(res[i].wine_id);
                     res[i].producer = producer;
+                    res[i].avgReview = avgReview;
                     wines.push(res[i]);
                 }
                 resolve(wines);
@@ -70,7 +72,7 @@ async function getAll(){
         })
     })
 }
-async function getById(wine_id){
+async function getById(wine_id, user_id){
     return new Promise (function(resolve, reject){
         sql.query("SELECT wine_id, producer_id, wine_name, type, price, quantity, color, description FROM wines WHERE wine_id = ?",
         [wine_id], async function(err, res){
@@ -84,8 +86,12 @@ async function getById(wine_id){
                 else{
                     var producer = await getProducer(res[0].producer_id);
                     var comments = await Comment.getCommentsByWineId(res[0].wine_id)
+                    var avgReview = await getReview(res[0].wine_id)
+                    var myReview = await getMyReview(res[0].wine_id, user_id)
                     res[0].producer = producer;
                     res[0].comments = comments;
+                    res[0].avgReview = avgReview;
+                    res[0].myReview = myReview;
                     resolve(res[0]);
                 }
         })
@@ -120,6 +126,28 @@ async function getByProducer(producer_id){
     })
 }
 
+async function getReview(wine_id){
+    return new Promise(function(resolve, reject){
+        sql.query("SELECT review FROM reviews WHERE wine_id = ?", [wine_id], async function(err, res){
+            if(err){
+                console.log("err", err);
+                resolve(-1);
+            }
+            else{
+            let avg = 0;
+            if(res.length !== 0){
+            for(var i = 0; i < res.length; i++){
+                avg = await (parseFloat(avg) + parseFloat(res[i].review)).toFixed(2);
+            }
+            avg = await parseFloat(avg)/parseFloat(res.length);
+            }
+            resolve(avg);
+            }
+                
+        })
+    })
+}
+
 async function getDetails(wine_id){
     return new Promise(function(resolve, reject){
         sql.query("SELECT * FROM wines WHERE wine_id = ?", [wine_id], function(err, res){
@@ -129,6 +157,23 @@ async function getDetails(wine_id){
             }
             else
                 resolve(res);
+        })
+    })
+}
+
+async function getMyReview(wine_id, user_id){
+    return new Promise(function(resolve, reject){
+        sql.query("SELECT review FROM reviews WHERE user_id = ? AND wine_id = ?", [user_id, wine_id], function(err, res){
+            if(err){
+                console.log("err", err)
+                resolve(-1);
+            }
+            else{
+            if(res.length !== 0)
+                resolve(res[0].review);
+            else
+                resolve(0);
+            }
         })
     })
 }

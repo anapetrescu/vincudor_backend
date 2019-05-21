@@ -50,7 +50,8 @@ async function add(review){
 
 async function edit(review){
     return new Promise(function(resolve, reject){
-        sql.query("UPDATE reviews SET review = ?", [review.review], function(err, res){
+        sql.query("UPDATE reviews SET review = ? WHERE user_id = ? AND wine_id = ?", 
+            [review.review, review.user_id, review.wine_id], function(err, res){
             if(err){
                 console.log("err", err);
                 resolve(-1);
